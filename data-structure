@@ -1,0 +1,355 @@
+(1) class Node:
+    def _init_(self, data=None):
+        self.data = data
+        self.next = None
+
+class SinglyLinkedList:
+    def _init_(self):
+        self.head = None
+
+    def append(self, data):
+        if not self.head:
+            self.head = Node(data)
+        else:
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = Node(data)
+
+    def pop(self):
+        if not self.head:
+            return None  # If the list is empty, return None
+        
+        # If there is only one node in the list
+        if not self.head.next:
+            popped_data = self.head.data
+            self.head = None
+            return popped_data
+        
+        # For lists with more than one node
+        current = self.head
+        while current.next.next:
+            current = current.next
+        popped_data = current.next.data
+        current.next = None
+        return popped_data
+
+    def _repr_(self):
+        nodes = []
+        current = self.head
+        while current:
+            nodes.append(current.data)
+            current = current.next
+        return f"<SinglyLinkedList: {nodes}>"
+
+# Test the implementation
+list = SinglyLinkedList()
+for i in 'abc':
+    list.append(i)
+val = list.pop()
+print(val, list)
+
+------------------------------
+
+2) class Node:
+    def _init_(self, data=None):
+        self.data = data
+        self.next = None
+
+class SinglyLinkedList:
+    def _init_(self):
+        self.head = None
+        self.tail = None
+        self.size = 0
+
+    def append(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+            self.tail = new_node
+        else:
+            self.tail.next = new_node
+            self.tail = new_node
+        self.size += 1
+
+    def pop(self):
+        if not self.head:
+            return None  # If the list is empty, return None
+        
+        # If there is only one node in the list
+        if self.head == self.tail:
+            popped_data = self.head.data
+            self.head = None
+            self.tail = None
+            self.size -= 1
+            return popped_data
+        
+        # For lists with more than one node
+        current = self.head
+        while current.next != self.tail:
+            current = current.next
+        popped_data = self.tail.data
+        current.next = None
+        self.tail = current
+        self.size -= 1
+        return popped_data
+
+    def _repr_(self):
+        nodes = []
+        current = self.head
+        while current:
+            nodes.append(current.data)
+            current = current.next
+        return f"<SinglyLinkedList ({self.size} elements): {nodes}>"
+
+# Test the implementation
+mylist = SinglyLinkedList()
+for c in 'abc':
+    mylist.append(c)
+val = mylist.pop()
+print(val, mylist)
+
+mylist = SinglyLinkedList()
+for c in 'abc':
+    mylist.append(c)
+val = mylist.pop()
+mylist.append('c')
+mylist.append('d')
+val = mylist.pop()
+print(val, mylist)
+
+mylist = SinglyLinkedList()
+for c in 'ab':
+    mylist.append(c)
+val = mylist.pop()
+print(val, mylist)
+
+mylist = SinglyLinkedList()
+mylist.append('a')
+val = mylist.pop()
+print(val, mylist)
+
+mylist = SinglyLinkedList()
+val = mylist.pop()
+
+-------------------
+
+3) class Node:
+    def _init_(self, data=None):
+        self.data = data
+        self.next = None
+
+class SinglyLinkedList:
+    def _init_(self):
+        self.head = None
+        self.tail = None
+        self.size = 0
+
+    def append(self, data):
+        if not self.head:
+            self.head = Node(data)
+            self.tail = self.head
+        else:
+            self.tail.next = Node(data)
+            self.tail = self.tail.next
+        self.size += 1
+
+    def insert(self, index, data):
+        if index < 0 or index > self.size:
+            raise ValueError("Index out of bounds")
+
+        if index == 0:
+            new_node = Node(data)
+            new_node.next = self.head
+            self.head = new_node
+            if not self.tail:
+                self.tail = new_node
+            self.size += 1
+            return
+
+        current = self.head
+        for _ in range(index - 1):
+            current = current.next
+        new_node = Node(data)
+        new_node.next = current.next
+        current.next = new_node
+        if not new_node.next:
+            self.tail = new_node
+        self.size += 1
+
+    def remove(self, index):
+        if index < 0 or index >= self.size:
+            raise ValueError("Index out of bounds")
+
+        if index == 0:
+            removed_data = self.head.data
+            self.head = self.head.next
+            if not self.head:
+                self.tail = None
+            self.size -= 1
+            return removed_data
+
+        current = self.head
+        for _ in range(index - 1):
+            current = current.next
+        removed_data = current.next.data
+        current.next = current.next.next
+        if not current.next:
+            self.tail = current
+        self.size -= 1
+        return removed_data
+
+    def _repr_(self):
+        nodes = []
+        current = self.head
+        while current:
+            nodes.append(current.data)
+            current = current.next
+        return f"<SinglyLinkedList ({self.size} elements): {nodes}>"
+
+# Test the implementation
+mylist = SinglyLinkedList()
+for c in 'abc':
+    mylist.append(c)
+mylist.insert(1, 'd')
+print(mylist)
+removed_data = mylist.remove(1)
+print(f"Removed data: {removed_data}")
+print(mylist)
+
+-----------------
+
+4) class Node:
+    def _init_(self, data=None):
+        self.data = data
+        self.prev = None
+        self.next = None
+
+class DoublyLinkedList:
+    def _init_(self):
+        self.head = None
+        self.tail = None
+        self.size = 0
+
+    def append(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+            self.tail = new_node
+        else:
+            self.tail.next = new_node
+            new_node.prev = self.tail
+            self.tail = new_node
+        self.size += 1
+
+    def insert(self, index, data):
+        if index < 0 or index > self.size:
+            raise ValueError("Index out of bounds")
+
+        new_node = Node(data)
+
+        if index == 0:
+            new_node.next = self.head
+            if self.head:
+                self.head.prev = new_node
+            self.head = new_node
+            if not self.tail:
+                self.tail = new_node
+        elif index == self.size:
+            self.tail.next = new_node
+            new_node.prev = self.tail
+            self.tail = new_node
+        else:
+            current = self.head
+            for _ in range(index):
+                current = current.next
+            new_node.prev = current.prev
+            new_node.next = current
+            current.prev.next = new_node
+            current.prev = new_node
+
+        self.size += 1
+
+    def _repr_(self):
+        nodes = []
+        current = self.head
+        while current:
+            nodes.append(current.data)
+            current = current.next
+        return f"<DoublyLinkedList ({self.size} elements): {nodes}>"
+
+# Test the implementation
+mylist = DoublyLinkedList()
+for i in range(10, 51, 10):
+    mylist.append(i)
+mylist.insert(0, 5)
+print(mylist)
+
+----------------
+
+5) class Node:
+    def _init_(self, data=None):
+        self.data = data
+        self.prev = None
+        self.next = None
+
+class DoublyLinkedList:
+    def _init_(self):
+        self.head = None
+        self.tail = None
+        self.size = 0
+
+    def append(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+            self.tail = new_node
+        else:
+            self.tail.next = new_node
+            new_node.prev = self.tail
+            self.tail = new_node
+        self.size += 1
+
+    def remove(self, index):
+        if self.size == 0:
+            return None
+
+        if index < 0 or index >= self.size:
+            raise ValueError("Index out of bounds")
+
+        if index == 0:
+            removed_data = self.head.data
+            self.head = self.head.next
+            if self.head:
+                self.head.prev = None
+            else:
+                self.tail = None
+        elif index == self.size - 1:
+            removed_data = self.tail.data
+            self.tail = self.tail.prev
+            self.tail.next = None
+        else:
+            current = self.head
+            for _ in range(index):
+                current = current.next
+            removed_data = current.data
+            current.prev.next = current.next
+            current.next.prev = current.prev
+
+        self.size -= 1
+        return removed_data
+
+    def _repr_(self):
+        nodes = []
+        current = self.head
+        while current:
+            nodes.append(current.data)
+            current = current.next
+        return f"<DoublyLinkedList ({self.size} elements): {nodes}>"
+
+# Test the implementation
+mylist = DoublyLinkedList()
+for i in range(10, 51, 10):
+    mylist.append(i)
+val = mylist.remove(2)
+print(val, mylist)
